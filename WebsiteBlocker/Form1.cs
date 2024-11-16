@@ -43,6 +43,9 @@ namespace WebsiteBlocker
 
         private void ListBox1_DrawItem(object? sender, DrawItemEventArgs e)
         {
+            if (e.Index < 0)
+                return;
+
             var listbox = (ListBox)sender!;
             var item = listbox.Items[e.Index];
             var selected = (e.State & DrawItemState.Selected) == DrawItemState.Selected;
@@ -76,7 +79,7 @@ namespace WebsiteBlocker
                 return;
 
             var lines = File.ReadAllLines(HostsPath);
-            var toWrite = lines.Where(a => !a.StartsWith($"127.0.0.1 {selected}"));
+            var toWrite = lines.Where(a => a != $"127.0.0.1 {selected}");
             File.WriteAllLines(HostsPath, toWrite);
             RefreshData();
         }
